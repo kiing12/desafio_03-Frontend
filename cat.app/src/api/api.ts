@@ -1,0 +1,6 @@
+import axios from 'axios';
+
+export const api = axios.create({
+    baseURL: "http://192.168.x.x:3000"
+    , // troque pelo IP da máquina no Expo
+});
