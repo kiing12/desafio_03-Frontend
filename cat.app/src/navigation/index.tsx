@@ -1,23 +1,32 @@
-import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import ListScreen from '../screens/ListScreen';
-import DetailScreen from '../screens/DetailScreen';
-import CreateEditScreen from '../screens/CreateEditScreen';
+import ListScreen from "../screens/ListScreen";
+import DetailScreen from "../screens/DetailScreen";
+import CreateEditScreen from "../screens/CreateEditScreen";
 
-import { RootStackParamList } from '../types';
+export type RootStackParamList = {
+  List: undefined;
+  Detail: { cat: Cat };
+  CreateEdit: { cat?: Cat };
+};
 
-// 🔥 AQUI está o ponto principal do erro que você tinha
+export type Cat = {
+  id: string;
+  name: string;
+  breed: string;
+  age: number;
+};
+
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function Routes() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="List" component={ListScreen} />
-        <Stack.Screen name="Detail" component={DetailScreen} />
-        <Stack.Screen name="CreateEdit" component={CreateEditScreen} />
+      <Stack.Navigator initialRouteName="List">
+        <Stack.Screen name="List" component={ListScreen} options={{ title: "Cats" }} />
+        <Stack.Screen name="Detail" component={DetailScreen} options={{ title: "Detalhes" }} />
+        <Stack.Screen name="CreateEdit" component={CreateEditScreen} options={{ title: "Salvar" }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

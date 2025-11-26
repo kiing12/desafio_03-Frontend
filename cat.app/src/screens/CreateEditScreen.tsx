@@ -1,41 +1,61 @@
-import React, { useState } from 'react';
-import { View, TextInput, Button } from 'react-native';
-import axios from 'axios';
+import React, { useState } from "react";
+import { View, TextInput, Button, StyleSheet } from "react-native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { api } from "../services/api";
+import { RootStackParamList } from "../navigation";
 
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../types';
-
-type Props = NativeStackScreenProps<RootStackParamList, 'CreateEdit'>;
+type Props = NativeStackScreenProps<RootStackParamList, "CreateEdit">;
 
 export default function CreateEditScreen({ route, navigation }: Props) {
   const cat = route.params?.cat;
 
-  const [name, setName] = useState(cat?.name ?? '');
-  const [breed, setBreed] = useState(cat?.breed ?? '');
+  const [name, setName] = useState(cat?.name || "");
+  const [breed, setBreed] = useState(cat?.breed || "");
+  const [age, setAge] = useState(String(cat?.age || ""));
 
   const save = async () => {
     if (cat) {
-      await axios.put(`http://localhost:3333/cats/${cat.id}`, {
-        name,
-        breed,
-      });
+      await api.put(`/cats/${cat.id}`, { name, breed, age: Number(age) });
     } else {
-      await axios.post('http://localhost:3333/cats', {
-        name,
-        breed,
-      });
+      await api.post("/cats", { name, breed, age: Number(age) });
     }
 
     navigation.goBack();
   };
 
   return (
-    <View style={{ flex: 1, padding: 20 }}>
-      <TextInput placeholder="Nome" value={name} onChangeText={setName} />
-      <TextInput placeholder="Raça" value={breed} onChangeText={setBreed} />
+    <View style={styles.container}>
+      <TextInput
+        placeholder="Nome"
+        value={name}
+        onChangeText={setName}
+        style={styles.input}
+      />
+      <TextInput
+        placeholder="Raça"
+        value={breed}
+        onChangeText={setBreed}
+        style={styles.input}
+      />
+      <TextInput
+        placeholder="Idade"
+        value={age}
+        onChangeText={setAge}
+        style={styles.input}
+        keyboardType="numeric"
+      />
 
       <Button title="Salvar" onPress={save} />
     </View>
   );
 }
-//     id: string;
+
+const styles = StyleSheet.create({
+  container: { padding: 20, gap: 12 },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 12,
+    borderRadius: 6,
+  },
+});
